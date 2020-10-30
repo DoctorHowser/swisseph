@@ -25,12 +25,12 @@ NAN_METHOD(node_swe_deltat) {
 	double deltat;
 
 	deltat = ::swe_deltat (
-		info [0]->NumberValue ()
+		info [0]->NumberValue (Nan::GetCurrentContext()).ToChecked()
 	);
 
 	Local <Object> result = Nan::New<Object> ();
 
-	result->Set (Nan::New<String> ("delta").ToLocalChecked(), Nan::New<Number> (deltat));
+	Nan::Set(result,Nan::New<String> ("delta").ToLocalChecked(), Nan::New<Number> (deltat));
 
     HandleCallback (info, result);
     info.GetReturnValue().Set (result);
@@ -62,16 +62,16 @@ NAN_METHOD(node_swe_time_equ) {
 	long rflag;
 
 	rflag = ::swe_time_equ (
-		info [0]->NumberValue (),
+		info [0]->NumberValue (Nan::GetCurrentContext()).ToChecked(),
 		&te, serr
 	);
 
 	Local <Object> result = Nan::New<Object> ();
 
 	if (rflag < 0) {
-		result->Set (Nan::New<String> ("error").ToLocalChecked(), Nan::New<String> (serr).ToLocalChecked());
+		Nan::Set(result,Nan::New<String> ("error").ToLocalChecked(), Nan::New<String> (serr).ToLocalChecked());
 	} else {
-		result->Set (Nan::New<String> ("timeEquation").ToLocalChecked(), Nan::New<Number> (te));
+		Nan::Set(result,Nan::New<String> ("timeEquation").ToLocalChecked(), Nan::New<Number> (te));
 	}
 
     HandleCallback (info, result);
@@ -103,14 +103,14 @@ NAN_METHOD(node_swe_sidtime0) {
 	double st;
 
 	st = ::swe_sidtime0 (
-		info [0]->NumberValue (),
-		info [1]->NumberValue (),
-		info [2]->NumberValue ()
+		info [0]->NumberValue (Nan::GetCurrentContext()).ToChecked(),
+		info [1]->NumberValue (Nan::GetCurrentContext()).ToChecked(),
+		info [2]->NumberValue (Nan::GetCurrentContext()).ToChecked()
 	);
 
 	Local <Object> result = Nan::New<Object> ();
 
-	result->Set (Nan::New<String> ("siderialTime").ToLocalChecked(), Nan::New<Number> (st));
+	Nan::Set(result,Nan::New<String> ("siderialTime").ToLocalChecked(), Nan::New<Number> (st));
 
     HandleCallback (info, result);
     info.GetReturnValue().Set (result);
@@ -139,12 +139,12 @@ NAN_METHOD(node_swe_sidtime) {
 	double st;
 
 	st = ::swe_sidtime (
-		info [0]->NumberValue ()
+		info [0]->NumberValue (Nan::GetCurrentContext()).ToChecked()
 	);
 
 	Local <Object> result = Nan::New<Object> ();
 
-	result->Set (Nan::New<String> ("siderialTime").ToLocalChecked(), Nan::New<Number> (st));
+	Nan::Set(result,Nan::New<String> ("siderialTime").ToLocalChecked(), Nan::New<Number> (st));
 
     HandleCallback (info, result);
     info.GetReturnValue().Set (result);
@@ -176,20 +176,20 @@ NAN_METHOD(node_swe_cotrans) {
 	double xpn [3] = {0};
 	double xpo [3] = {0};
 
-	xpo [0] = info [0]->ToObject ()->Get (0)->NumberValue ();
-	xpo [1] = info [0]->ToObject ()->Get (1)->NumberValue ();
-	xpo [2] = info [0]->ToObject ()->Get (2)->NumberValue ();
+	xpo [0] = info [0]->ToObject (Nan::GetCurrentContext()).FromMaybe(v8::Local<v8::Object>())->Get (Nan::GetCurrentContext(),0).ToLocalChecked()->NumberValue (Nan::GetCurrentContext()).ToChecked();
+	xpo [1] = info [0]->ToObject (Nan::GetCurrentContext()).FromMaybe(v8::Local<v8::Object>())->Get (Nan::GetCurrentContext(),1).ToLocalChecked()->NumberValue (Nan::GetCurrentContext()).ToChecked();
+	xpo [2] = info [0]->ToObject (Nan::GetCurrentContext()).FromMaybe(v8::Local<v8::Object>())->Get (Nan::GetCurrentContext(),2).ToLocalChecked()->NumberValue (Nan::GetCurrentContext()).ToChecked();
 
 	::swe_cotrans (
 		xpo, xpn,
-        info [1]->NumberValue ()
+        info [1]->NumberValue (Nan::GetCurrentContext()).ToChecked()
 	);
 
 	Local <Object> result = Nan::New<Object> ();
 
-	result->Set (Nan::New<String> ("longitude").ToLocalChecked(), Nan::New<Number> (xpn [0]));
-	result->Set (Nan::New<String> ("latitude").ToLocalChecked(), Nan::New<Number> (xpn [1]));
-	result->Set (Nan::New<String> ("distance").ToLocalChecked(), Nan::New<Number> (xpn [2]));
+	Nan::Set(result,Nan::New<String> ("longitude").ToLocalChecked(), Nan::New<Number> (xpn [0]));
+	Nan::Set(result,Nan::New<String> ("latitude").ToLocalChecked(), Nan::New<Number> (xpn [1]));
+	Nan::Set(result,Nan::New<String> ("distance").ToLocalChecked(), Nan::New<Number> (xpn [2]));
 
     HandleCallback (info, result);
     info.GetReturnValue().Set (result);
@@ -218,23 +218,31 @@ NAN_METHOD(node_swe_cotrans_sp) {
 		Nan::ThrowTypeError ("Wrong type of arguments");
 	};
 
-	double xpn [3] = {0};
-	double xpo [3] = {0};
+	double xpn [6] = {0};
+	double xpo [6] = {0};
 
-	xpo [0] = info [0]->ToObject ()->Get (0)->NumberValue ();
-	xpo [1] = info [0]->ToObject ()->Get (1)->NumberValue ();
-	xpo [2] = info [0]->ToObject ()->Get (2)->NumberValue ();
+	xpo [0] = info [0]->ToObject (Nan::GetCurrentContext()).FromMaybe(v8::Local<v8::Object>())->Get (Nan::GetCurrentContext(),0).ToLocalChecked()->NumberValue (Nan::GetCurrentContext()).ToChecked();
+	xpo [1] = info [0]->ToObject (Nan::GetCurrentContext()).FromMaybe(v8::Local<v8::Object>())->Get (Nan::GetCurrentContext(),1).ToLocalChecked()->NumberValue (Nan::GetCurrentContext()).ToChecked();
+	xpo [2] = info [0]->ToObject (Nan::GetCurrentContext()).FromMaybe(v8::Local<v8::Object>())->Get (Nan::GetCurrentContext(),2).ToLocalChecked()->NumberValue (Nan::GetCurrentContext()).ToChecked();
+	xpo [3] = info [0]->ToObject (Nan::GetCurrentContext()).FromMaybe(v8::Local<v8::Object>())->Get (Nan::GetCurrentContext(),3).ToLocalChecked()->NumberValue (Nan::GetCurrentContext()).ToChecked();
+	xpo [4] = info [0]->ToObject (Nan::GetCurrentContext()).FromMaybe(v8::Local<v8::Object>())->Get (Nan::GetCurrentContext(),4).ToLocalChecked()->NumberValue (Nan::GetCurrentContext()).ToChecked();
+	xpo [5] = info [0]->ToObject (Nan::GetCurrentContext()).FromMaybe(v8::Local<v8::Object>())->Get (Nan::GetCurrentContext(),5).ToLocalChecked()->NumberValue (Nan::GetCurrentContext()).ToChecked();
+
 
 	::swe_cotrans_sp (
 		xpo, xpn,
-        info [1]->NumberValue ()
+        info [1]->NumberValue (Nan::GetCurrentContext()).ToChecked()
 	);
 
 	Local <Object> result = Nan::New<Object> ();
 
-	result->Set (Nan::New<String> ("longitude").ToLocalChecked(), Nan::New<Number> (xpn [0]));
-	result->Set (Nan::New<String> ("latitude").ToLocalChecked(), Nan::New<Number> (xpn [1]));
-	result->Set (Nan::New<String> ("distance").ToLocalChecked(), Nan::New<Number> (xpn [2]));
+	Nan::Set(result,Nan::New<String> ("longitude").ToLocalChecked(), Nan::New<Number> (xpn [0]));
+	Nan::Set(result,Nan::New<String> ("latitude").ToLocalChecked(), Nan::New<Number> (xpn [1]));
+	Nan::Set(result,Nan::New<String> ("distance").ToLocalChecked(), Nan::New<Number> (xpn [2]));
+	Nan::Set(result,Nan::New<String> ("longitudeSpeed").ToLocalChecked(), Nan::New<Number> (xpn [3]));
+	Nan::Set(result,Nan::New<String> ("latitudeSpeed").ToLocalChecked(), Nan::New<Number> (xpn [4]));
+	Nan::Set(result,Nan::New<String> ("distanceSpeed").ToLocalChecked(), Nan::New<Number> (xpn [5]));
+
 
     HandleCallback (info, result);
     info.GetReturnValue().Set (result);
@@ -256,7 +264,7 @@ NAN_METHOD(node_swe_get_tid_acc) {
 
 	Local <Object> result = Nan::New<Object> ();
 
-	result->Set (Nan::New<String> ("acceleration").ToLocalChecked(), Nan::New<Number> (acceleration));
+	Nan::Set(result,Nan::New<String> ("acceleration").ToLocalChecked(), Nan::New<Number> (acceleration));
 
     HandleCallback (info, result);
     info.GetReturnValue().Set (result);
@@ -282,7 +290,7 @@ NAN_METHOD(node_swe_set_tid_acc) {
 	};
 
 	::swe_set_tid_acc (
-        info [0]->NumberValue ()
+        info [0]->NumberValue (Nan::GetCurrentContext()).ToChecked()
 	);
 
 	Local <Object> result = Nan::New<Object> ();
@@ -314,12 +322,12 @@ NAN_METHOD(node_swe_degnorm) {
 	double x360;
 
 	x360 = ::swe_degnorm (
-		info [0]->NumberValue ()
+		info [0]->NumberValue (Nan::GetCurrentContext()).ToChecked()
 	);
 
 	Local <Object> result = Nan::New<Object> ();
 
-	result->Set (Nan::New<String> ("x360").ToLocalChecked(), Nan::New<Number> (x360));
+	Nan::Set(result,Nan::New<String> ("x360").ToLocalChecked(), Nan::New<Number> (x360));
 
     HandleCallback (info, result);
     info.GetReturnValue().Set (result);
@@ -348,12 +356,12 @@ NAN_METHOD(node_swe_radnorm) {
 	double x2Pi;
 
 	x2Pi = ::swe_radnorm (
-		info [0]->NumberValue ()
+		info [0]->NumberValue (Nan::GetCurrentContext()).ToChecked()
 	);
 
 	Local <Object> result = Nan::New<Object> ();
 
-	result->Set (Nan::New<String> ("x2Pi").ToLocalChecked(), Nan::New<Number> (x2Pi));
+	Nan::Set(result,Nan::New<String> ("x2Pi").ToLocalChecked(), Nan::New<Number> (x2Pi));
 
     HandleCallback (info, result);
     info.GetReturnValue().Set (result);
@@ -383,13 +391,13 @@ NAN_METHOD(node_swe_rad_midp) {
 	double xMid2Pi;
 
 	xMid2Pi = ::swe_rad_midp (
-		info [0]->NumberValue (),
-		info [1]->NumberValue ()
+		info [0]->NumberValue (Nan::GetCurrentContext()).ToChecked(),
+		info [1]->NumberValue (Nan::GetCurrentContext()).ToChecked()
 	);
 
 	Local <Object> result = Nan::New<Object> ();
 
-	result->Set (Nan::New<String> ("xMid2Pi").ToLocalChecked(), Nan::New<Number> (xMid2Pi));
+	Nan::Set(result,Nan::New<String> ("xMid2Pi").ToLocalChecked(), Nan::New<Number> (xMid2Pi));
 
     HandleCallback (info, result);
     info.GetReturnValue().Set (result);
@@ -419,13 +427,13 @@ NAN_METHOD(node_swe_deg_midp) {
 	double xMid360;
 
 	xMid360 = ::swe_deg_midp (
-		info [0]->NumberValue (),
-		info [1]->NumberValue ()
+		info [0]->NumberValue (Nan::GetCurrentContext()).ToChecked(),
+		info [1]->NumberValue (Nan::GetCurrentContext()).ToChecked()
 	);
 
 	Local <Object> result = Nan::New<Object> ();
 
-	result->Set (Nan::New<String> ("xMid360").ToLocalChecked(), Nan::New<Number> (xMid360));
+	Nan::Set(result,Nan::New<String> ("xMid360").ToLocalChecked(), Nan::New<Number> (xMid360));
 
     HandleCallback (info, result);
     info.GetReturnValue().Set (result);
@@ -463,18 +471,18 @@ NAN_METHOD(node_swe_split_deg) {
 	int isgn;
 
 	::swe_split_deg (
-		info [0]->NumberValue (),
-		(int)info [1]->NumberValue (),
+		info [0]->NumberValue (Nan::GetCurrentContext()).ToChecked(),
+		(int)info [1]->NumberValue (Nan::GetCurrentContext()).ToChecked(),
 		&ideg, &imin, &isec, &dsecfr, &isgn
 	);
 
 	Local <Object> result = Nan::New<Object> ();
 
-	result->Set (Nan::New<String> ("degree").ToLocalChecked(), Nan::New<Number> (ideg));
-	result->Set (Nan::New<String> ("min").ToLocalChecked(), Nan::New<Number> (imin));
-	result->Set (Nan::New<String> ("second").ToLocalChecked(), Nan::New<Number> (isec));
-	result->Set (Nan::New<String> ("secondFraction").ToLocalChecked(), Nan::New<Number> (dsecfr));
-	result->Set (Nan::New<String> ("sign").ToLocalChecked(), Nan::New<Number> (isgn));
+	Nan::Set(result,Nan::New<String> ("degree").ToLocalChecked(), Nan::New<Number> (ideg));
+	Nan::Set(result,Nan::New<String> ("min").ToLocalChecked(), Nan::New<Number> (imin));
+	Nan::Set(result,Nan::New<String> ("second").ToLocalChecked(), Nan::New<Number> (isec));
+	Nan::Set(result,Nan::New<String> ("secondFraction").ToLocalChecked(), Nan::New<Number> (dsecfr));
+	Nan::Set(result,Nan::New<String> ("sign").ToLocalChecked(), Nan::New<Number> (isgn));
 
     HandleCallback (info, result);
     info.GetReturnValue().Set (result);
@@ -503,12 +511,12 @@ NAN_METHOD(node_swe_csnorm) {
 	int centisec360;
 
 	centisec360 = ::swe_csnorm (
-		(int)info [0]->NumberValue ()
+		(int)info [0]->NumberValue (Nan::GetCurrentContext()).ToChecked()
 	);
 
 	Local <Object> result = Nan::New<Object> ();
 
-	result->Set (Nan::New<String> ("centisec360").ToLocalChecked(), Nan::New<Number> (centisec360));
+	Nan::Set(result,Nan::New<String> ("centisec360").ToLocalChecked(), Nan::New<Number> (centisec360));
 
     HandleCallback (info, result);
     info.GetReturnValue().Set (result);
@@ -538,13 +546,13 @@ NAN_METHOD(node_swe_difcsn ) {
 	int centisecDiff;
 
 	centisecDiff = ::swe_difcsn (
-		(int)info [0]->NumberValue (),
-		(int)info [1]->NumberValue ()
+		(int)info [0]->NumberValue (Nan::GetCurrentContext()).ToChecked(),
+		(int)info [1]->NumberValue (Nan::GetCurrentContext()).ToChecked()
 	);
 
 	Local <Object> result = Nan::New<Object> ();
 
-	result->Set (Nan::New<String> ("centisecDiff").ToLocalChecked(), Nan::New<Number> (centisecDiff));
+	Nan::Set(result,Nan::New<String> ("centisecDiff").ToLocalChecked(), Nan::New<Number> (centisecDiff));
 
     HandleCallback (info, result);
     info.GetReturnValue().Set (result);
@@ -574,13 +582,13 @@ NAN_METHOD(node_swe_difdegn ) {
 	double degreeDiff;
 
 	degreeDiff = ::swe_difdegn (
-		info [0]->NumberValue (),
-		info [1]->NumberValue ()
+		info [0]->NumberValue (Nan::GetCurrentContext()).ToChecked(),
+		info [1]->NumberValue (Nan::GetCurrentContext()).ToChecked()
 	);
 
 	Local <Object> result = Nan::New<Object> ();
 
-	result->Set (Nan::New<String> ("degreeDiff").ToLocalChecked(), Nan::New<Number> (degreeDiff));
+	Nan::Set(result,Nan::New<String> ("degreeDiff").ToLocalChecked(), Nan::New<Number> (degreeDiff));
 
     HandleCallback (info, result);
     info.GetReturnValue().Set (result);
@@ -610,13 +618,13 @@ NAN_METHOD(node_swe_difcs2n) {
 	int centisecDistance180;
 
 	centisecDistance180 = ::swe_difcs2n (
-		(int)info [0]->NumberValue (),
-		(int)info [1]->NumberValue ()
+		(int)info [0]->NumberValue (Nan::GetCurrentContext()).ToChecked(),
+		(int)info [1]->NumberValue (Nan::GetCurrentContext()).ToChecked()
 	);
 
 	Local <Object> result = Nan::New<Object> ();
 
-	result->Set (Nan::New<String> ("centisecDistance180").ToLocalChecked(), Nan::New<Number> (centisecDistance180));
+	Nan::Set(result,Nan::New<String> ("centisecDistance180").ToLocalChecked(), Nan::New<Number> (centisecDistance180));
 
     HandleCallback (info, result);
     info.GetReturnValue().Set (result);
@@ -646,13 +654,13 @@ NAN_METHOD(node_swe_difdeg2n) {
 	double degreeDistance180;
 
 	degreeDistance180 = ::swe_difdeg2n (
-		info [0]->NumberValue (),
-		info [1]->NumberValue ()
+		info [0]->NumberValue (Nan::GetCurrentContext()).ToChecked(),
+		info [1]->NumberValue (Nan::GetCurrentContext()).ToChecked()
 	);
 
 	Local <Object> result = Nan::New<Object> ();
 
-	result->Set (Nan::New<String> ("degreeDistance180").ToLocalChecked(), Nan::New<Number> (degreeDistance180));
+	Nan::Set(result,Nan::New<String> ("degreeDistance180").ToLocalChecked(), Nan::New<Number> (degreeDistance180));
 
     HandleCallback (info, result);
     info.GetReturnValue().Set (result);
@@ -682,13 +690,13 @@ NAN_METHOD(node_swe_difrad2n) {
 	double degreeDistancePi;
 
 	degreeDistancePi = ::swe_difrad2n (
-		info [0]->NumberValue (),
-		info [1]->NumberValue ()
+		info [0]->NumberValue (Nan::GetCurrentContext()).ToChecked(),
+		info [1]->NumberValue (Nan::GetCurrentContext()).ToChecked()
 	);
 
 	Local <Object> result = Nan::New<Object> ();
 
-	result->Set (Nan::New<String> ("degreeDistancePi").ToLocalChecked(), Nan::New<Number> (degreeDistancePi));
+	Nan::Set(result,Nan::New<String> ("degreeDistancePi").ToLocalChecked(), Nan::New<Number> (degreeDistancePi));
 
     HandleCallback (info, result);
     info.GetReturnValue().Set (result);
@@ -717,12 +725,12 @@ NAN_METHOD(node_swe_csroundsec) {
 	int centisecRound;
 
 	centisecRound = ::swe_csroundsec (
-		(int)info [0]->NumberValue ()
+		(int)info [0]->NumberValue (Nan::GetCurrentContext()).ToChecked()
 	);
 
 	Local <Object> result = Nan::New<Object> ();
 
-	result->Set (Nan::New<String> ("centisecRound").ToLocalChecked(), Nan::New<Number> (centisecRound));
+	Nan::Set(result,Nan::New<String> ("centisecRound").ToLocalChecked(), Nan::New<Number> (centisecRound));
 
     HandleCallback (info, result);
     info.GetReturnValue().Set (result);
@@ -751,12 +759,12 @@ NAN_METHOD(node_swe_d2l) {
 	int xRound;
 
 	xRound = ::swe_d2l (
-		info [0]->NumberValue ()
+		info [0]->NumberValue (Nan::GetCurrentContext()).ToChecked()
 	);
 
 	Local <Object> result = Nan::New<Object> ();
 
-	result->Set (Nan::New<String> ("xRound").ToLocalChecked(), Nan::New<Number> (xRound));
+	Nan::Set(result,Nan::New<String> ("xRound").ToLocalChecked(), Nan::New<Number> (xRound));
 
     HandleCallback (info, result);
     info.GetReturnValue().Set (result);
@@ -785,12 +793,12 @@ NAN_METHOD(node_swe_day_of_week) {
 	int dayOfWeek;
 
 	dayOfWeek = ::swe_day_of_week (
-		info [0]->NumberValue ()
+		info [0]->NumberValue (Nan::GetCurrentContext()).ToChecked()
 	);
 
 	Local <Object> result = Nan::New<Object> ();
 
-	result->Set (Nan::New<String> ("dayOfWeek").ToLocalChecked(), Nan::New<Number> (dayOfWeek));
+	Nan::Set(result,Nan::New<String> ("dayOfWeek").ToLocalChecked(), Nan::New<Number> (dayOfWeek));
 
     HandleCallback (info, result);
     info.GetReturnValue().Set (result);
@@ -821,15 +829,15 @@ NAN_METHOD(node_swe_cs2timestr) {
 	char timeString [AS_MAXCH] = {0};
 
 	::swe_cs2timestr (
-		(int)info [0]->NumberValue (),
-		(int)info [1]->NumberValue (),
-		(int)info [2]->NumberValue (),
+		(int)info [0]->NumberValue (Nan::GetCurrentContext()).ToChecked(),
+		(int)info [1]->NumberValue (Nan::GetCurrentContext()).ToChecked(),
+		(int)info [2]->NumberValue (Nan::GetCurrentContext()).ToChecked(),
 		timeString
 	);
 
 	Local <Object> result = Nan::New<Object> ();
 
-	result->Set (Nan::New<String> ("timeString").ToLocalChecked(), Nan::New<String> (timeString).ToLocalChecked());
+	Nan::Set(result,Nan::New<String> ("timeString").ToLocalChecked(), Nan::New<String> (timeString).ToLocalChecked());
 
     HandleCallback (info, result);
     info.GetReturnValue().Set (result);
@@ -860,15 +868,15 @@ NAN_METHOD(node_swe_cs2lonlatstr) {
 	char lonlatString [AS_MAXCH] = {0};
 
 	::swe_cs2lonlatstr (
-		(int)info [0]->NumberValue (),
-		(* String::Utf8Value (info [1]->ToString ())) [0],
-		(* String::Utf8Value (info [2]->ToString ())) [0],
+		(int)info [0]->NumberValue (Nan::GetCurrentContext()).ToChecked(),
+		(* String::Utf8Value (Isolate::GetCurrent(), info [1]->ToString (Nan::GetCurrentContext()).FromMaybe(v8::Local<v8::String>()))) [0],
+		(* String::Utf8Value (Isolate::GetCurrent(), info [2]->ToString (Nan::GetCurrentContext()).FromMaybe(v8::Local<v8::String>()))) [0],
 		lonlatString
 	);
 
 	Local <Object> result = Nan::New<Object> ();
 
-	result->Set (Nan::New<String> ("lonlatString").ToLocalChecked(), Nan::New<String> (lonlatString).ToLocalChecked());
+	Nan::Set(result,Nan::New<String> ("lonlatString").ToLocalChecked(), Nan::New<String> (lonlatString).ToLocalChecked());
 
     HandleCallback (info, result);
     info.GetReturnValue().Set (result);
@@ -897,14 +905,15 @@ NAN_METHOD(node_swe_cs2degstr) {
 	char degreeString [AS_MAXCH] = {0};
 
 	::swe_cs2degstr (
-		(int)info [0]->NumberValue (),
+		(int)info [0]->NumberValue (Nan::GetCurrentContext()).ToChecked(),
 		degreeString
 	);
 
 	Local <Object> result = Nan::New<Object> ();
 
-	result->Set (Nan::New<String>("degreeString").ToLocalChecked(), Nan::New<String>(degreeString).ToLocalChecked());
+	Nan::Set(result,Nan::New<String>("degreeString").ToLocalChecked(), Nan::New<String>(degreeString).ToLocalChecked());
 
     HandleCallback (info, result);
     info.GetReturnValue().Set (result);
 };
+

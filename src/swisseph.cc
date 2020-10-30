@@ -46,6 +46,9 @@ void Initialize (Local <Object> exports) {
 	Nan::SetMethod (exports, "swe_fixstar", node_swe_fixstar);
 	Nan::SetMethod (exports, "swe_fixstar_ut", node_swe_fixstar_ut);
 	Nan::SetMethod (exports, "swe_fixstar_mag", node_swe_fixstar_mag);
+	Nan::SetMethod (exports, "swe_fixstar2", node_swe_fixstar2);
+	Nan::SetMethod (exports, "swe_fixstar2_ut", node_swe_fixstar2_ut);
+	Nan::SetMethod (exports, "swe_fixstar2_mag", node_swe_fixstar2_mag);
 	Nan::SetMethod (exports, "swe_close", node_swe_close);
 	Nan::SetMethod (exports, "swe_set_ephe_path", node_swe_set_ephe_path);
 	Nan::SetMethod (exports, "swe_set_jpl_file", node_swe_set_jpl_file);
@@ -54,7 +57,13 @@ void Initialize (Local <Object> exports) {
 	Nan::SetMethod (exports, "swe_set_sid_mode", node_swe_set_sid_mode);
 	Nan::SetMethod (exports, "swe_get_ayanamsa", node_swe_get_ayanamsa);
 	Nan::SetMethod (exports, "swe_get_ayanamsa_ut", node_swe_get_ayanamsa_ut);
+	Nan::SetMethod (exports, "swe_get_ayanamsa_ex", node_swe_get_ayanamsa_ex);
+	Nan::SetMethod (exports, "swe_get_ayanamsa_ex_ut", node_swe_get_ayanamsa_ex_ut);
 	Nan::SetMethod (exports, "swe_get_ayanamsa_name", node_swe_get_ayanamsa_name);
+	Nan::SetMethod (exports, "swe_nod_aps", node_swe_nod_aps);
+	Nan::SetMethod (exports, "swe_nod_aps_ut", node_swe_nod_aps_ut);
+	Nan::SetMethod (exports, "swe_get_orbital_elements", node_swe_get_orbital_elements);
+	Nan::SetMethod (exports, "swe_orbit_max_min_true_distance", node_swe_orbit_max_min_true_distance);
 
 	// hel
 	Nan::SetMethod (exports, "swe_heliacal_ut", node_swe_heliacal_ut);
@@ -64,7 +73,9 @@ void Initialize (Local <Object> exports) {
 	// house
 	Nan::SetMethod (exports, "swe_houses", node_swe_houses);
 	Nan::SetMethod (exports, "swe_houses_ex", node_swe_houses_ex);
+	Nan::SetMethod (exports, "swe_houses_ex2", node_swe_houses_ex2);
 	Nan::SetMethod (exports, "swe_houses_armc", node_swe_houses_armc);
+	Nan::SetMethod (exports, "swe_houses_armc_ex2", node_swe_houses_armc_ex2);
 	Nan::SetMethod (exports, "swe_houses_pos", node_swe_houses_pos);
 
 	// eclipse
@@ -80,7 +91,7 @@ void Initialize (Local <Object> exports) {
 	Nan::SetMethod (exports, "swe_lun_eclipse_when", node_swe_lun_eclipse_when);
 	Nan::SetMethod (exports, "swe_lun_eclipse_when_loc", node_swe_lun_eclipse_when_loc);
 	Nan::SetMethod (exports, "swe_pheno", node_swe_pheno);
-	Nan::SetMethod (exports, "swe_pheno_ut", node_swe_pheno);
+	Nan::SetMethod (exports, "swe_pheno_ut", node_swe_pheno_ut);
 	Nan::SetMethod (exports, "swe_refrac", node_swe_refrac);
 	Nan::SetMethod (exports, "swe_refrac_extended", node_swe_refrac_extended);
 	Nan::SetMethod (exports, "swe_set_lapse_rate", node_swe_set_lapse_rate);
@@ -88,8 +99,6 @@ void Initialize (Local <Object> exports) {
 	Nan::SetMethod (exports, "swe_azalt_rev", node_swe_azalt_rev);
 	Nan::SetMethod (exports, "swe_rise_trans", node_swe_rise_trans);
 	Nan::SetMethod (exports, "swe_rise_trans_true_hor", node_swe_rise_trans_true_hor);
-	Nan::SetMethod (exports, "swe_nod_aps", node_swe_nod_aps);
-	Nan::SetMethod (exports, "swe_nod_aps_ut", node_swe_nod_aps_ut);
 }
 
 NODE_MODULE (swisseph, Initialize);
